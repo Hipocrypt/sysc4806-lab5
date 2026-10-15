@@ -2,9 +2,19 @@
 
 Student: **Daniel Esenwa (101199099)**.
 
-The GitHub repository and Azure Web App have not been created. These steps need
-your account sign-in. The included workflow implements CI and CD; the account
-configuration below enables it. No live deployment is claimed in this project.
+The GitHub repository is now
+[Hipocrypt/sysc4806-lab5](https://github.com/Hipocrypt/sysc4806-lab5). Azure's
+connected deployment workflow targets Web App `lab5-101199099` at
+[the live AddressBook URL](https://lab5-101199099-a9draqh6gjhcazf4.canadacentral-01.azurewebsites.net/).
+The hosted CI build, Azure deployment, and live POST/GET and email checks have
+passed. Verification links are recorded in `TEST-RESULTS.md`.
+
+The instructions below describe setup from scratch. The existing Azure
+connection already uses its generated `AZUREAPPSERVICE_*` secrets and
+`.github/workflows/main_lab5-101199099.yml`; do not also enable the optional
+deployment in `ci-cd.yml` while retaining that connection. The account setup
+sections below are reference instructions; the TA invitations and Brightspace
+upload still need to be completed.
 
 ## 1. Create the repository and run CI
 

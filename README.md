@@ -4,14 +4,17 @@
 
 **Student ID:** 101199099
 
-**GitHub repository:** Not created yet.
+**GitHub repository:** [Hipocrypt/sysc4806-lab5](https://github.com/Hipocrypt/sysc4806-lab5)
 
-**Azure deployment:** Not deployed yet.
+**Azure deployment:** [Open the AddressBook app](https://lab5-101199099-a9draqh6gjhcazf4.canadacentral-01.azurewebsites.net/)
 
-The application and CI/CD workflow are implemented and tested locally. GitHub
-and Azure setup remains to be completed using [DEPLOYMENT.md](DEPLOYMENT.md).
-Replace the two lines above with the real repository and live deployment links
-after setup. Do not submit this ZIP as proof of a live deployment until then.
+The repository is connected to GitHub, and Azure's deployment workflow targets
+`lab5-101199099`. The hosted build and deployment passed, and the live app's
+POST/GET workflow and email feature passed verification on October 15, 2026.
+Setup and submission steps are recorded in [DEPLOYMENT.md](DEPLOYMENT.md).
+
+[![Java CI and Azure CD](https://github.com/Hipocrypt/sysc4806-lab5/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Hipocrypt/sysc4806-lab5/actions/workflows/ci-cd.yml)
+[![Azure deployment](https://github.com/Hipocrypt/sysc4806-lab5/actions/workflows/main_lab5-101199099.yml/badge.svg)](https://github.com/Hipocrypt/sysc4806-lab5/actions/workflows/main_lab5-101199099.yml)
 
 This project extends the Lab4 Spring MVC address book with automated HTTP tests,
 a GitHub Actions pipeline, and an optional **email address** for each buddy.
@@ -71,20 +74,21 @@ version. See [TEST-RESULTS.md](TEST-RESULTS.md) for the local verification recor
 
 [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml) runs tests and builds
 on **every branch push**, pull request, and manual workflow run. It uploads JUnit
-reports and the executable `addressbook.jar`. Deployment depends on that build
-passing and downloads its exact JAR. It runs only on `main`, after the Azure
-repository variable and OIDC secrets have been configured. Pull requests do not
-deploy. The final smoke check verifies the live email feature over HTTP.
+reports and the executable `addressbook.jar`.
 
-Before Azure is configured the deployment job is deliberately skipped; a green
-build alone does not establish that a deployment has occurred. No dependency
-graph upload or additional GitHub permission token is needed.
+Azure's connected workflow,
+[.github/workflows/main_lab5-101199099.yml](.github/workflows/main_lab5-101199099.yml),
+builds with Java 21 and runs `mvn clean install` on `main`. Its deployment job
+depends on that build passing, downloads the resulting JAR, authenticates with
+Azure's generated OIDC secrets, and deploys to `lab5-101199099`. Pull requests do
+not deploy. This is the active deployment connection created in Azure.
 
-After creating the repository, add a build badge using your actual owner/repo:
-
-```markdown
-[![Java CI and Azure CD](https://github.com/OWNER/REPOSITORY/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/OWNER/REPOSITORY/actions/workflows/ci-cd.yml)
-```
+The original `ci-cd.yml` also contains an optional deployment job that stays
+skipped unless `AZURE_WEBAPP_NAME` is configured as a repository variable. Leave
+that optional job disabled while using Azure's connected workflow to avoid
+duplicate deployments. No dependency graph upload or additional GitHub
+permission token is needed. `scripts/smoke_test.py` can verify the live app's
+POST/GET workflow and email feature using its actual URL.
 
 ## Endpoints
 
@@ -105,9 +109,8 @@ PowerShell requests. The app does not seed or delete sample records at startup.
 
 ## Submission
 
-Complete the account and deployment steps in [DEPLOYMENT.md](DEPLOYMENT.md),
-replace the pending links above, add your badge, invite the TAs listed on
-Brightspace, and regenerate the archive:
+Review [DEPLOYMENT.md](DEPLOYMENT.md), invite the TAs listed on Brightspace,
+and regenerate the archive after any further changes:
 
 ```powershell
 .\scripts\package-submission.ps1

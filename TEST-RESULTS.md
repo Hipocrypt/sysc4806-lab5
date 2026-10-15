@@ -1,4 +1,4 @@
-# Local verification record
+# Verification record
 
 **Daniel Esenwa — 101199099**
 
@@ -49,7 +49,23 @@ home and populated-book screenshots were inspected locally.
 - PowerShell parsed both helper/packaging scripts without errors.
 - `bash -n` accepted the Azure setup script.
 
-These are local results. GitHub-hosted Actions execution, Azure provisioning,
-Azure deployment and redeployment, TA invitations, and Brightspace submission
-have **not** been performed. The GitHub repository and Azure Web App still need
-to be created and connected as described in `DEPLOYMENT.md`.
+## GitHub Actions and Azure verification
+
+Verified on October 15, 2026 for commit `e89d3d9`:
+
+- [GitHub CI run 38782193451](https://github.com/Hipocrypt/sysc4806-lab5/actions/runs/38782193451):
+  **success**, including the Test and package step and JUnit report upload.
+- [Azure workflow run 38782193476](https://github.com/Hipocrypt/sysc4806-lab5/actions/runs/38782193476):
+  **success** for both the build and deployment jobs. The Maven build runs the
+  tests before the dependent deployment job can start.
+- [Live AddressBook](https://lab5-101199099-a9draqh6gjhcazf4.canadacentral-01.azurewebsites.net/):
+  `scripts/smoke_test.py` **passed** against the Azure URL. It verified the
+  student name and ID on the home page, book and buddy creation, attachment,
+  the saved email in book/buddy JSON, and the email in the Thymeleaf HTML.
+
+The Azure-generated workflow is the active deployment connection. The original
+workflow's optional deployment job remains skipped, so only the Azure-generated
+workflow deploys the app.
+
+TA invitations and Brightspace submission remain unverified. See
+`DEPLOYMENT.md` for the remaining submission steps.
