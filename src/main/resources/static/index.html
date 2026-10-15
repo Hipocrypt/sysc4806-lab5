@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AddressBook | Daniel Esenwa</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/addressbook.js" defer></script>
+</head>
+<body>
+<main>
+    <p class="eyebrow">SYSC 4806 · Lab 5</p>
+    <h1>AddressBook</h1>
+    <p>Keep your buddies and their contact details together.</p>
+    <section>
+        <h2>Start a new address book</h2>
+        <form id="create-book">
+            <button type="submit">Create address book</button>
+        </form>
+    </section>
+    <section>
+        <h2>Open an existing book</h2>
+        <form id="open-book">
+            <label>Book ID <input name="bookId" type="number" min="1" step="1" required></label>
+            <button type="submit">Open book</button>
+        </form>
+    </section>
+    <p id="status" role="status" aria-live="polite"></p>
+    <p class="note">Books are kept for this running session. Save the book ID to open it again. Data resets when the app restarts.</p>
+    <footer>Daniel Esenwa · Student ID 101199099</footer>
+</main>
+</body>
+</html>

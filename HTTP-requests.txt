@@ -1,0 +1,23 @@
+SYSC 4806 Lab 5 - Daniel Esenwa (101199099)
+
+Start the app from this directory: .\mvn.ps1 spring-boot:run
+These PowerShell requests capture returned IDs, so they also work after earlier requests.
+Change $base to the real Azure URL to repeat against the deployed application.
+
+$base = 'http://localhost:8080'
+$book = Invoke-RestMethod -Method Post -Uri "$base/api/addressbooks" -ContentType 'application/json' -Body '{}'
+$daniel = Invoke-RestMethod -Method Post -Uri "$base/api/buddies" -ContentType 'application/json' -Body '{"firstName":"Daniel","lastName":"Esenwa","address":324,"phone":234,"email":"daniel@example.com"}'
+$tom = Invoke-RestMethod -Method Post -Uri "$base/api/buddies" -ContentType 'application/json' -Body '{"firstName":"Tom","lastName":"Carleton","address":613,"phone":2342}'
+Invoke-RestMethod -Method Post -Uri "$base/api/addressbooks/$($book.id)/buddies" -ContentType 'application/json' -Body (@{ buddyId = $daniel.id } | ConvertTo-Json)
+Invoke-RestMethod -Method Post -Uri "$base/api/addressbooks/$($book.id)/buddies" -ContentType 'application/json' -Body (@{ buddyId = $tom.id } | ConvertTo-Json)
+Invoke-RestMethod -Uri "$base/api/addressbooks/$($book.id)" | ConvertTo-Json -Depth 5
+Invoke-RestMethod -Uri "$base/api/buddies/$($daniel.id)" | ConvertTo-Json
+curl.exe -i "$base/addressbooks/$($book.id)"
+
+Expect the email daniel@example.com in Daniel's JSON and in the HTML table.
+Tom's omitted email is null in JSON and displayed as a dash in the table.
+Creation returns 201, attachment and reads return 200. The automated JUnit tests
+verify these responses without a browser or manual curl requests.
+
+Open http://localhost:8080/ in a browser for the interactive interface.
+All data is discarded when the application stops.

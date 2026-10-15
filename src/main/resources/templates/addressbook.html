@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Address book</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/addressbook.js" defer></script>
+</head>
+<body>
+<main>
+<a href="/">All books / home</a>
+<h1 th:text="|Address book ${book.id}|">Address book</h1>
+<p th:if="${book.buddies.empty}">This address book has no buddies.</p>
+<div class="table-scroll">
+<table th:unless="${book.buddies.empty}">
+    <thead><tr><th>First name</th><th>Last name</th><th>Address</th><th>Phone</th><th>Email</th></tr></thead>
+    <tbody><tr th:each="buddy : ${book.buddies}">
+        <td th:text="${buddy.firstName}"></td><td th:text="${buddy.lastName}"></td>
+        <td th:text="${buddy.address}"></td><td th:text="${buddy.phone}"></td>
+        <td th:text="${buddy.email != null ? buddy.email : '—'}"></td>
+    </tr></tbody>
+</table>
+</div>
+<section>
+    <h2>Add a buddy</h2>
+    <form id="add-buddy" th:attr="data-book-id=${book.id}">
+        <div class="fields">
+            <label>First name <input name="firstName" maxlength="255" required></label>
+            <label>Last name <input name="lastName" maxlength="255" required></label>
+            <label>Address <input name="address" type="number" min="-2147483648" max="2147483647" step="1" required></label>
+            <label>Phone <input name="phone" type="number" min="-2147483648" max="2147483647" step="1" required></label>
+            <label>Email (optional) <input name="email" type="email" maxlength="254"></label>
+        </div>
+        <button type="submit">Add buddy</button>
+    </form>
+    <p id="status" role="status" aria-live="polite"></p>
+</section>
+<p class="note">Address and phone use the numeric format from the previous labs. Data resets when the app restarts.</p>
+<footer>Daniel Esenwa · Student ID 101199099</footer>
+</main>
+</body>
+</html>

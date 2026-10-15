@@ -1,0 +1,78 @@
+name: Java CI and Azure CD
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (Java 21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Java 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Test and package
+        run: |
+          chmod +x mvnw
+          ./mvnw --batch-mode --no-transfer-progress clean verify
+      - name: Upload JUnit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-reports
+          path: target/surefire-reports/
+          if-no-files-found: warn
+      - name: Upload tested application
+        uses: actions/upload-artifact@v4
+        with:
+          name: addressbook-jar
+          path: target/addressbook.jar
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy tested JAR to Azure
+    needs: build
+    # Enable CD by configuring the repository variable and OIDC secrets in DEPLOYMENT.md.
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/main' &&
+      vars.AZURE_WEBAPP_NAME != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: azure-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download the JAR built by this run
+        uses: actions/download-artifact@v5
+        with:
+          name: addressbook-jar
+          path: app
+      - name: Sign in to Azure with OpenID Connect
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy application
+        id: deploy
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          package: app/addressbook.jar
+      - name: Verify the live app and email feature
+        env:
+          APP_URL: ${{ steps.deploy.outputs.webapp-url }}
+        run: python3 scripts/smoke_test.py "$APP_URL"

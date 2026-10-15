@@ -1,0 +1,13 @@
+target/
+.tools/
+.idea/
+.vscode/
+*.iml
+*.log
+*.zip
+*.pdf
+.env
+*.PublishSettings
+*.publishsettings
+.DS_Store
+__pycache__/
